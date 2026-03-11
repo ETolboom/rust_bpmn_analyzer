@@ -124,7 +124,10 @@ pub fn read_bpmn_from_string(
                     let last_event_bytes = last_event_start_bytes.unwrap();
                     match last_event_type {
                         None => {
-                            unsupported_elements.push(last_event_bytes);
+                            // NOTE: Quick hack to make timerEvents supported
+                            //the issue is that timerEvents how no intermediateCatchEvent (e.g. end event)
+                            add_flow_node(&mut collaboration, &last_event_bytes, FlowNodeType::Task(TaskType::Default));
+                            // unsupported_elements.push(last_event_bytes);
                         }
                         Some(event_type) => {
                             add_event(&mut collaboration, &last_event_bytes, event_type);
